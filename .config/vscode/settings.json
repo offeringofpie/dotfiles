@@ -1,0 +1,102 @@
+{
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "workbench.colorTheme": "1984 - Fancy",
+    "editor.fontFamily": "FiraCode-Retina",
+    "editor.tabSize": 2,
+    "window.zoomLevel": 0,
+    "editor.formatOnPaste": true,
+    "editor.fontSize": 14,
+    "editor.cursorStyle": "block",
+    "editor.renderWhitespace": "boundary",
+    "editor.acceptSuggestionOnEnter": "smart",
+    "window.nativeTabs": true,
+    "editor.wordWrap": "on",
+    "terminal.external.osxExec": "iterm.app",
+    "terminal.integrated.macOptionClickForcesSelection": true,
+    "debug.internalConsoleOptions": "neverOpen",
+    "editor.formatOnType": true,
+    "workbench.iconTheme": "ayu",
+    "search.quickOpen.includeSymbols": true,
+    "terminal.integrated.confirmOnExit": true,
+    "terminal.integrated.fontFamily": "Fira Code",
+    "terminal.integrated.fontSize": 10,
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.enabled": false,
+    "terminal.explorerKind": "external",
+    "editor.foldingStrategy": "indentation",
+    "explorer.confirmDragAndDrop": false,
+    "files.associations": {
+        "*.css": "postcss"
+    },
+    "breadcrumbs.enabled": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.validate.enable": false,
+    "dart.checkForSdkUpdates": false,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "gitlens.views.repositories.location": "scm",
+    "gitlens.views.fileHistory.location": "explorer",
+    "gitlens.views.lineHistory.location": "explorer",
+    "gitlens.views.compare.location": "gitlens",
+    "gitlens.views.search.location": "gitlens",
+    "rust.all_features": true,
+    "rust.unstable_features": true,
+    "rust.clippy_preference": "on",
+    "editor.formatOnSave": true,
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "phpfmt.php_bin": "php",
+    "phpfmt.passes": [
+        "AddMissingParentheses",
+        "AlignPHPCode",
+        "PrettyPrintDocBlocks",
+        "PSR2KeywordsLowerCase",
+        "PSR2LnAfterNamespace",
+        "PSR2ModifierVisibilityStaticOrder",
+        "PSR2SingleEmptyLineAndStripClosingTag",
+        "ReindentComments",
+        "ReindentSwitchBlocks",
+    ],
+    "phpfmt.exclude": [
+        "AllmanStyleBraces",
+        "StripNewlineWithinClassBody",
+    ],
+    "phpfmt.psr2": false,
+    "phpfmt.indent_with_space": 2,
+    "vs-docblockr.phpMixedUnionTypes": true,
+    "phpfmt.enable_auto_align": true,
+    "prettier.singleQuote": true,
+    "explorer.confirmDelete": false,
+    "spellchecker.language": "en_GB-ise",
+    "spellchecker.ignoreWordsList": [
+        "Prot",
+        "Agonist"
+    ],
+    "writerMode.highlightCurrentLine": true,
+    "write.trace.server": "verbose",
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "terminal.integrated.rendererType": "dom"
+}
