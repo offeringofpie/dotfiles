@@ -1,0 +1,76 @@
+#PersonalToolbar {
+  --uc-bm-height: 20px; /* Might need to adjust if the toolbar has other buttons */
+  --uc-bm-padding: 2px; /* Vertical padding to be applied to bookmarks */
+}
+
+:root[uidensity='compact'] #PersonalToolbar {
+  --uc-bm-padding: 1px;
+}
+:root[uidensity='touch'] #PersonalToolbar {
+  --uc-bm-padding: 6px;
+}
+
+#PersonalToolbar:not([customizing]) {
+  margin-bottom: calc(2px - var(--uc-bm-height) - 2 * var(--uc-bm-padding));
+  transform: rotateX(90deg);
+  transform-origin: top;
+  transition: transform 135ms linear 100ms !important;
+  z-index: 1;
+}
+#PlacesToolbarItems > .bookmark-item {
+  padding-block: var(--uc-bm-padding) !important;
+}
+
+#nav-bar:focus-within + #PersonalToolbar {
+  transition-delay: 100ms !important;
+  transform: rotateX(0);
+}
+
+#navigator-toolbox:hover > #PersonalToolbar {
+  transition-delay: 100ms !important;
+  transform: rotateX(0);
+}
+
+#TabsToolbar,
+.tab-background,
+#nav-bar,
+.theme-dark,
+.theme-light,
+slider,
+.CodeMirror,
+.devtools-toolbar,
+.message,
+.theme-body,
+.table-widget-empty-text {
+  -moz-appearance: -moz-mac-vibrancy-dark !important;
+}
+
+#TabsToolbar {
+  position: relative;
+  z-index: 1;
+}
+
+#TabsToolbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.tabbrowser-tab .tab-background-inner {
+  /*   background: rgba(0,0,0,.1); */
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.2));
+}
+
+.tabbrowser-tab[visuallyselected='true'] .tab-background-inner {
+  background-color: transparent;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.1)
+  );
+}
