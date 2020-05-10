@@ -1,2 +1,2 @@
 #!/bin/bash
-code --list-extensions > ~/.config/vscode/extensions.txt
+code --list-extensions > ~/.config/Code/extensions.txt
