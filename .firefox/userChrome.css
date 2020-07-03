@@ -40,23 +40,44 @@
   VIBRANCY
 **/
 
-#TabsToolbar,
-.tab-background,
-#nav-bar,
-.theme-dark,
-.theme-light,
-slider,
-.CodeMirror,
-.devtools-toolbar,
-.message,
-.theme-body,
-.table-widget-empty-text {
+
+:root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+:root:not([uidensity="compact"]) #back-button:not([disabled]):not([open]):hover > .toolbarbutton-icon {
+  background-color: unset !important;
+}
+
+#TabsToolbar, .tab-background, #nav-bar, .theme-dark,
+.theme-light,slider, .CodeMirror, .devtools-toolbar, .message,
+.theme-body, .table-widget-empty-text {
   -moz-appearance: -moz-mac-vibrancy-dark !important;
 }
 
 #TabsToolbar {
   position: relative;
   z-index: 1;
+}
+
+#TabsToolbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.tabbrowser-tab .tab-background-inner {
+  background: transparent;
+}
+
+.tabbrowser-tab[visuallyselected="true"] .tab-background-inner {
+ background-color: transparent !important;
 }
 
 *|*:root:-moz-lwtheme {
