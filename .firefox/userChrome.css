@@ -1,89 +1,66 @@
-#PersonalToolbar {
-  --uc-bm-height: 20px; /* Might need to adjust if the toolbar has other buttons */
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/autohide_bookmarks_and_main_toolbars.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+#navigator-toolbox{
+  --uc-bm-height: 22px; /* Might need to adjust if the toolbar has other buttons */
   --uc-bm-padding: 2px; /* Vertical padding to be applied to bookmarks */
+  --uc-navbar-height: -40px; /* navbar is main toolbar. Use negative value */
+  --uc-autohide-toolbar-delay: 600ms; /* The toolbar is hidden after 0.6s */
 }
 
-:root[uidensity='compact'] #PersonalToolbar {
-  --uc-bm-padding: 1px;
-}
-:root[uidensity='touch'] #PersonalToolbar {
-  --uc-bm-padding: 6px;
-}
+:root[uidensity=compact] #navigator-toolbox{ --uc-bm-padding: 1px; --uc-navbar-height: -32px }
+:root[uidensity="touch"] #navigator-toolbox{ --uc-bm-padding: 6px }
 
-#PersonalToolbar:not([customizing]) {
-  margin-bottom: calc(2px - var(--uc-bm-height) - 2 * var(--uc-bm-padding));
+:root[sessionrestored] #nav-bar:not([customizing]),
+#PersonalToolbar:not([customizing]){
   transform: rotateX(90deg);
   transform-origin: top;
-  transition: transform 135ms linear 100ms !important;
-  z-index: 1;
+  transition: transform 135ms linear !important;
+  z-index: 2;
 }
-#PlacesToolbarItems > .bookmark-item {
-  padding-block: var(--uc-bm-padding) !important;
+#navigator-toolbox > #PersonalToolbar{
+  transform-origin: 0px var(--uc-navbar-height);
+  z-index: 1;
+  position: relative;
 }
 
-/* SELECT BOOKMARKS TOOLBAR BEHAVIOR */
+:root[sessionrestored] #navigator-toolbox:not([customizing]){ margin-bottom:  calc(2px - var(--uc-bm-height) - 2 * var(--uc-bm-padding) + var(--uc-navbar-height)); }
+
+#PlacesToolbarItems > .bookmark-item{ padding-block: var(--uc-bm-padding) !important; }
+
+/* Make sure the bookmarks toolbar is never collapsed even if it is disabled */
+#PersonalToolbar[collapsed="true"]{
+  min-height: initial !important;
+  max-height: initial !important;
+  visibility: hidden !important
+}
+
+/* The invisible toolbox will overlap sidebar so we'll work around that here */
+#navigator-toolbox{ pointer-events: none; border-bottom: none !important; }
+#PersonalToolbar{ border-bottom: 1px solid var(--chrome-content-separator-color) }
+#navigator-toolbox > *{ pointer-events: auto }
+
+/* SELECT TOOLBAR BEHAVIOR */
 /* Comment out or delete either one of these to disable that behavior */
 
 /* Show when urlbar is focused */
-#nav-bar:focus-within + #PersonalToolbar {
-  transition-delay: 100ms !important;
+#nav-bar:focus-within + #PersonalToolbar,
+#navigator-toolbox > #nav-bar:focus-within{
   transform: rotateX(0);
 }
 
 /* Show when cursor is over the toolbar area */
-#navigator-toolbox:hover > #PersonalToolbar {
-  transition-delay: 100ms !important;
+#navigator-toolbox:hover > #PersonalToolbar,
+#navigator-toolbox:hover > #nav-bar{
   transform: rotateX(0);
 }
 
-/**
-  VIBRANCY
-**/
-
-
-:root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
-  background-color: transparent !important;
-  border: none !important;
+/* Uncomment to enable compatibility for multi-row_bookmarks.css */
+/* This would break buttons placed in the toolbar but that is likely not happening if you are using multi-row setup  */
+/*
+#PersonalToolbar:not([customizing]){
+  position: fixed;
+  display: block;
+  margin-bottom: 0px !important;
 }
-
-:root:not([uidensity="compact"]) #back-button:not([disabled]):not([open]):hover > .toolbarbutton-icon {
-  background-color: unset !important;
-}
-
-#TabsToolbar, .tab-background, #nav-bar, .theme-dark,
-.theme-light,slider, .CodeMirror, .devtools-toolbar, .message,
-.theme-body, .table-widget-empty-text {
-  -moz-appearance: -moz-mac-vibrancy-dark !important;
-}
-
-#TabsToolbar {
-  position: relative;
-  z-index: 1;
-}
-
-#TabsToolbar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: transparent;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-}
-
-.tabbrowser-tab .tab-background-inner {
-  background: transparent;
-}
-
-.tabbrowser-tab[visuallyselected="true"] .tab-background-inner {
- background-color: transparent !important;
-}
-
-*|*:root:-moz-lwtheme {
-background-color: transparent !important;
-}
-
-*|*:root:-moz-lwtheme:-moz-window-inactive {
-background-color: transparent !important;
-}
+*/
