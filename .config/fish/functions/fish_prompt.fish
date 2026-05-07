@@ -21,110 +21,94 @@ end
 function show_virtualenv -d "Show Python/Conda virtual environments"
     if set -q VIRTUAL_ENV
         set -l venvname (basename "$VIRTUAL_ENV")
-        prompt_segment magenta bryellow " (py:$venvname) "
+        prompt_segment normal bryellow "(py:$venvname) "
         return
     end
     if set -q CONDA_DEFAULT_ENV
-        prompt_segment magenta bryellow " (conda:$CONDA_DEFAULT_ENV) "
+        prompt_segment normal bryellow "(conda:$CONDA_DEFAULT_ENV) "
         return
     end
-    if test -f package.json; and set -q npm_config_prefix
-        set -l node_version (node --version 2>/dev/null | string replace 'v' '')
-        if test -n "$node_version"
-            prompt_segment green brwhite " (node:$node_version) "
-        end
-    end
 end
 
-function show_user -d "Show user and hostname with terminal color styling"
+function show_user -d "Show user and hostname only when relevant"
     if not contains $__cached_username $default_user; or test -n "$SSH_CLIENT"
-        prompt_segment normal brgreen " $__cached_username"
-        if test "$__cached_username" != "$__cached_hostname"
-            prompt_segment normal brwhite "@"
-            prompt_segment normal brcyan "$__cached_hostname "
-            set -g pad ""
-        else
-            prompt_segment normal brwhite " "
-        end
+        prompt_segment normal brgreen "$__cached_username"
+        prompt_segment normal brwhite "@"
+        prompt_segment normal brcyan "$__cached_hostname "
     end
 end
 
-function _set_venv_project --on-variable VIRTUAL_ENV -d "Handle virtual environment projects"
-    if test -n "$VIRTUAL_ENV" -a -e "$VIRTUAL_ENV/.project"
-        set -g VIRTUAL_ENV_PROJECT (cat "$VIRTUAL_ENV/.project")
-    else
-        set -e VIRTUAL_ENV_PROJECT
-    end
-end
-
-function show_pwd -d "Show current directory with smart truncation"
-    set -l current_dir (pwd)
+function show_pwd -d "Show current directory in blue"
     set -l display_path (pwd)
-    set display_path (string replace -r "^$HOME" "~/" "$display_path")
-    set display_path (string replace -r "/Documents?" "⬢" "$display_path")
-    set display_path (string replace -r "/Downloads?" "⬇" "$display_path")
-    set display_path (string replace -r "/Desktop" "⌨" "$display_path")
-    prompt_segment normal brcyan "$display_path "
+    set display_path (string replace -r "^$HOME" "~" "$display_path")
+    prompt_segment normal blue "$display_path "
 end
 
-function show_git -d "Show git status with terminal color styling and performance optimization"
+function show_git -d "Show git branch and modified file count"
     if not git rev-parse --git-dir >/dev/null 2>&1
         return
     end
+
     set -l branch_symbol "⎇"
-    set -l ahead_symbol "↑"
-    set -l behind_symbol "↓"
-    set -l modified_symbol "±"
-    set -l untracked_symbol "?"
-    set -l staged_symbol "●"
     set -l branch_name (git symbolic-ref --short HEAD 2>/dev/null; or git rev-parse --short HEAD 2>/dev/null)
     if test -z "$branch_name"
         return
     end
-    set -l git_status_output (git status --porcelain=v1 --branch --ahead-behind 2>/dev/null)
-    if test $status -ne 0
-        return
+
+    prompt_segment normal green "$branch_symbol $branch_name "
+
+    set -l porcelain (git status --porcelain 2>/dev/null)
+    if test -n "$porcelain"
+        set -l modified (echo "$porcelain" | grep -c '^.M\|^.D')
+        set -l staged (echo "$porcelain" | grep -c '^[MADRC]')
+        set -l untracked (echo "$porcelain" | grep -c '^??')
+
+        if test $modified -gt 0
+            prompt_segment normal yellow "$modified modified "
+        end
+        if test $staged -gt 0
+            prompt_segment normal brgreen "$staged staged "
+        end
+        if test $untracked -gt 0
+            prompt_segment normal brred "$untracked untracked "
+        end
     end
-    set -l is_dirty (echo "$git_status_output" | grep -v '^##' | wc -l | string trim)
-    set -l ahead_behind (echo "$git_status_output" | head -1 | string match -r '\[ahead (\d+).*behind (\d+)\]|\[ahead (\d+)\]|\[behind (\d+)\]')
-    if test "$is_dirty" != "0"
-        prompt_segment normal yellow "$branch_symbol $branch_name$modified_symbol "
-    else
-        prompt_segment normal green "$branch_symbol $branch_name "
+
+    set -l upstream (git rev-parse --abbrev-ref '@{upstream}' 2>/dev/null)
+    if test -n "$upstream"
+        set -l ahead (git rev-list --count '@{upstream}..HEAD' 2>/dev/null)
+        set -l behind (git rev-list --count 'HEAD..@{upstream}' 2>/dev/null)
+        if test "$ahead" -gt 0 2>/dev/null
+            prompt_segment normal cyan "↑$ahead "
+        end
+        if test "$behind" -gt 0 2>/dev/null
+            prompt_segment normal magenta "↓$behind "
+        end
     end
 end
 
-function show_prompt -d "Show prompt character with terminal color privilege styling"
+function show_status -d "Show last command exit status if non-zero"
+    if test $RETVAL -ne 0
+        prompt_segment normal brred "✘ $RETVAL "
+    end
+end
+
+function show_prompt -d "Show the circle prompt character"
     if test $__cached_uid -eq 0
-        prompt_segment red brwhite " [ROOT] # "
-        set_color normal
-        echo -n " "
+        prompt_segment normal brred "# "
     else
-        prompt_segment normal bryellow "⬢ "
+        set_color normal
+        echo -n "⏺ "
     end
     set_color normal
 end
 
-function fish_prompt -d "Main prompt with terminal colors and high performance"
+function fish_prompt -d "Main prompt"
     set -g RETVAL $status
-    set -g pad " "
+    show_status
     show_virtualenv
     show_user
     show_pwd
     show_git
     show_prompt
-end
-
-if not set -q __cached_hostname
-    set -g __cached_hostname (hostname -s)
-end
-if not set -q __cached_username
-    set -g __cached_username (whoami)
-end
-if not set -q __cached_uid
-    set -g __cached_uid (id -u)
-end
-
-if not set -q default_user
-    set -g default_user $USER
 end
