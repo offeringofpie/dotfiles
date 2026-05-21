@@ -1,4 +1,3 @@
-
 fish_add_path /opt/homebrew/bin
 fish_add_path /usr/local/opt/nss/bin
 
@@ -38,14 +37,12 @@ abbr --add --global cpu 'sysctl -n machdep.cpu.brand_string'
 abbr --add --global g 'git'
 abbr --add --global gst 'git status -sb'
 abbr --add --global gs 'git status -s'
-abbr --add --global gl 'git log --oneline --graph --decorate'
-abbr --add --global gla 'git log --oneline --graph --decorate --all'
+abbr --add --global gl 'git pull'
+abbr --add --global gla 'git log --oneline --graph --decorate --all --date=short'
 abbr --add --global gp 'git push'
 abbr --add --global gpu 'git push -u origin HEAD'
 abbr --add --global gpf 'git push --force-with-lease'
 abbr --add --global gf 'git fetch --all --prune'
-abbr --add --global gc 'git commit -vm'
-abbr --add --global gca 'git commit -vam'
 abbr --add --global ga 'git add'
 abbr --add --global gb 'git branch'
 abbr --add --global gco 'git checkout'
@@ -83,6 +80,14 @@ abbr --add --global kdp 'kubectl describe pods'
 abbr --add --global ke 'kubectl exec -ti'
 abbr --add --global kgp 'kubectl get pods'
 abbr --add --global klf 'kubectl logs -f'
+
+function gc -d "Git commit with quoted message"
+    git commit -v -m "$argv"
+end
+
+function gca -d "Git commit -a with quoted message"
+    git commit -va -m "$argv"
+end
 
 function optimize -d "Re-encode video for streaming with x264"
     ffmpeg -i $argv[1] -c:v libx264 -crf 22 -c:a aac -movflags faststart $argv[2]
@@ -122,3 +127,10 @@ function extract -d "Extract any common archive type"
         case '*';         echo "Cannot extract $argv[1]"
     end
 end
+
+# pnpm
+set -gx PNPM_HOME "/Users/jl/Library/pnpm"
+if not string match -q -- "$PNPM_HOME/bin" $PATH
+  set -gx PATH "$PNPM_HOME/bin" $PATH
+end
+# pnpm end
