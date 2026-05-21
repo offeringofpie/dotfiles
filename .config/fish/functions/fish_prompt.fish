@@ -44,23 +44,26 @@ function show_pwd -d "Show current directory in blue"
     prompt_segment normal blue "$display_path "
 end
 
-function show_git -d "Show git branch and modified file count"
+function show_git_branch -d "Show git branch on left side"
     if not git rev-parse --git-dir >/dev/null 2>&1
         return
     end
-
-    set -l branch_symbol "⎇"
     set -l branch_name (git symbolic-ref --short HEAD 2>/dev/null; or git rev-parse --short HEAD 2>/dev/null)
     if test -z "$branch_name"
         return
     end
+    prompt_segment normal green "⎇ $branch_name "
+end
 
-    prompt_segment normal green "$branch_symbol $branch_name "
+function show_git_status -d "Show git porcelain status on right side"
+    if not git rev-parse --git-dir >/dev/null 2>&1
+        return
+    end
 
     set -l porcelain (git status --porcelain 2>/dev/null)
     if test -n "$porcelain"
         set -l modified (echo "$porcelain" | grep -c '^.M\|^.D')
-        set -l staged (echo "$porcelain" | grep -c '^[MADRC]')
+        set -l staged   (echo "$porcelain" | grep -c '^[MADRC]')
         set -l untracked (echo "$porcelain" | grep -c '^??')
 
         if test $modified -gt 0
@@ -76,7 +79,7 @@ function show_git -d "Show git branch and modified file count"
 
     set -l upstream (git rev-parse --abbrev-ref '@{upstream}' 2>/dev/null)
     if test -n "$upstream"
-        set -l ahead (git rev-list --count '@{upstream}..HEAD' 2>/dev/null)
+        set -l ahead  (git rev-list --count '@{upstream}..HEAD' 2>/dev/null)
         set -l behind (git rev-list --count 'HEAD..@{upstream}' 2>/dev/null)
         if test "$ahead" -gt 0 2>/dev/null
             prompt_segment normal cyan "↑$ahead "
@@ -109,6 +112,10 @@ function fish_prompt -d "Main prompt"
     show_virtualenv
     show_user
     show_pwd
-    show_git
+    show_git_branch
     show_prompt
+end
+
+function fish_right_prompt -d "Right-side git status"
+    show_git_status
 end
